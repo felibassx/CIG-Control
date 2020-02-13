@@ -1,0 +1,19 @@
+{
+  "hosting": [
+    {
+      "target": "IngresosGastos",
+      "public": "dist/IngresosGastos",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "rewrites": [
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ]
+    }
+  ]
+}

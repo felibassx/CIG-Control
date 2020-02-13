@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "cig-control-ee8ab": {
+      "hosting": {
+        "IngresosGastos": [
+          "cig-control-ee8ab"
+        ]
+      }
+    }
+  }
+}
