@@ -4,24 +4,73 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase';
 import { User } from '../models/user.model';
-import { Subscription } from 'rxjs';
+import Swal from 'sweetalert2';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { ROLES } from '../utils/const.utils';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  private userModel: User;
-  private userSubscription: Subscription = new Subscription();
   fbProvider = new firebase.auth.FacebookAuthProvider();
   gooProvider = new firebase.auth.GoogleAuthProvider();
 
   constructor(
     private afAuth: AngularFireAuth,
     private afDB: AngularFirestore,
+    private router: Router
   ) { }
+
+  login(email: string, password: string, remember: boolean) {
+
+    // this.store.dispatch( new ActivarLoadingAction() );
+
+    if ( remember ) {
+      localStorage.setItem( 'email',  email );
+    } else {
+      localStorage.removeItem( 'email' );
+    }
+
+    this.afAuth.auth.signInWithEmailAndPassword(email, password)
+      .then(
+        resp => {
+          // this.store.dispatch( new DesactivarLoadingAction() );
+          this.router.navigate(['/']);
+          console.log('LOGIN OK', resp);
+        }
+      )
+      .catch(err => {
+        Swal.fire(
+          'Error Login',
+          'Se ha producido un error al intentar autenticar en la aplicación. Detalle: ' + err,
+          'error'
+        );
+      });
+  }
+
+  resetPassword(email: string ) {
+    this.afAuth.auth.sendPasswordResetEmail( email )
+      .then(
+        () => {
+          Swal.fire(
+            'Restablecer Contraseña',
+            'Se ha enviado un correo a "' + email + '" con las instrucciones para restablecer su contraseña',
+            'success'
+          );
+        }
+      )
+      .catch(
+        (error) => {
+          Swal.fire(
+            'Error',
+            'Se ha producido un error al intentar restablecer la contraseña, intente una vez más',
+            'error'
+          );
+        }
+      );
+  }
 
   createUser(nombre: string, birdDate: Date, email: string, role: string, password: string) {
 
@@ -41,6 +90,7 @@ export class AuthService {
           .set(user)
           .then( (respDoc) => {
             console.log('CORRECTO', user);
+            this.router.navigate(['/']);
           })
           .catch(
             (err) => {
@@ -68,7 +118,11 @@ export class AuthService {
       console.log(result);
     })
     .catch(err => {
-      console.log(err.message);
+      Swal.fire(
+        'Error Login Facebook',
+        'Se ha producido un error al intentar autenticar en la aplicación. Detalle: ' + err,
+        'error'
+      );
     });
 
   }
@@ -94,11 +148,15 @@ export class AuthService {
           .set(user)
           .then( (respDoc) => {
             console.log('CORRECTO GOOGLE', user);
+            this.router.navigate(['/']);
           })
           .catch(
             (err) => {
-              console.log('ERROR GOOGLE', err);
-              // this.store.dispatch( new DesactivarLoadingAction() );
+              Swal.fire(
+                'Error Login Google',
+                'Se ha producido un error al intentar autenticar en la aplicación. Detalle: ' + err,
+                'error'
+              );
             }
           );
 

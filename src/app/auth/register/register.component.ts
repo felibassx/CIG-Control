@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../auth.service';
-import { User } from '../../models/user.model';
 import { Subscription } from 'rxjs';
 import { ROLES } from 'src/app/utils/const.utils';
+
+declare function init_plugins();
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
-  styles: []
+  styleUrls: ['../auth.components.css']
 })
 export class RegisterComponent implements OnInit {
 
@@ -19,6 +20,7 @@ export class RegisterComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    init_plugins();
   }
 
   onSubmit( data: any ) {
