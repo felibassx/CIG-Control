@@ -14,7 +14,7 @@ const routes: Routes = [
         // canActivate: [ LoginGuardGuard ],
         loadChildren: './pages/pages.module#PagesModule'
     },
-    { path: '**', redirectTo: '#' },
+    { path: '**', redirectTo: '/nopagefound' },
 ];
 
 

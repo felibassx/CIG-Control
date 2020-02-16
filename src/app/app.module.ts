@@ -12,6 +12,7 @@ import { environment } from '../environments/environment';
 import { PagesComponent } from './pages/pages.component';
 import { FormsModule } from '@angular/forms';
 import { APP_ROUTES } from './app-routing.module';
+import { SharedModule } from './shared/shared.module';
 
 
 
@@ -26,7 +27,8 @@ import { APP_ROUTES } from './app-routing.module';
     FormsModule,
     AngularFireModule.initializeApp( environment.firebase ),
     AngularFirestoreModule,
-    APP_ROUTES
+    APP_ROUTES,
+    SharedModule
   ],
   providers: [],
   bootstrap: [AppComponent]

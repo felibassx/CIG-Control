@@ -50,6 +50,10 @@ export class AuthService {
       });
   }
 
+  logout() {
+    
+  }
+
   resetPassword(email: string ) {
     this.afAuth.auth.sendPasswordResetEmail( email )
       .then(
