@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 
 // Libs
+import { map, filter } from 'rxjs/operators';
 import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase';
 import { User } from '../models/user.model';
@@ -8,6 +9,13 @@ import Swal from 'sweetalert2';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { ROLES } from '../utils/const.utils';
 import { Router } from '@angular/router';
+import { Subscription, pipe } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { AppState } from '../app.reducer';
+import * as fromShared from '../shared/ui.action';
+import * as fromAuth from './auth.actions';
+import { HttpClient } from '@angular/common/http';
+import { Menu } from '../models/menu.model';
 
 @Injectable({
   providedIn: 'root'
@@ -17,11 +25,43 @@ export class AuthService {
   fbProvider = new firebase.auth.FacebookAuthProvider();
   gooProvider = new firebase.auth.GoogleAuthProvider();
 
+  private userSubscripcion: Subscription = new Subscription();
+  private user: User;
+  menus: Menu[];
+
   constructor(
     private afAuth: AngularFireAuth,
     private afDB: AngularFirestore,
-    private router: Router
+    private router: Router,
+    private store: Store<AppState>,
+    private httpClient: HttpClient
   ) { }
+
+  // Esta funcion estará escuchando cuando el estado del usuario cambie 
+  initAuthListener() {
+
+    this.store.dispatch( new fromShared.ActivarLoadingAction() );
+
+    this.afAuth.authState.subscribe((fbUser: firebase.User) => {
+      
+      if ( fbUser ) {
+        this.userSubscripcion = this.afDB.doc(`${ fbUser.uid }/user`).valueChanges()
+          .subscribe( (usuarioObj: any) => {
+            const newUser = new User( usuarioObj );
+            this.store.dispatch( new fromAuth.SetUserAction( newUser ) );
+            
+            this.user = newUser;
+
+            this.store.dispatch( new fromShared.DesactivarLoadingAction() );
+          });
+      } else {
+          this.user = null;
+          this.userSubscripcion.unsubscribe();
+          this.store.dispatch( new fromShared.DesactivarLoadingAction() );
+      }
+    });
+
+  }
 
   login(email: string, password: string, remember: boolean) {
 
@@ -36,9 +76,9 @@ export class AuthService {
     this.afAuth.auth.signInWithEmailAndPassword(email, password)
       .then(
         resp => {
-          // this.store.dispatch( new DesactivarLoadingAction() );
+          this.store.dispatch( new fromShared.DesactivarLoadingAction() );
           this.router.navigate(['/']);
-          console.log('LOGIN OK', resp);
+          // console.log('LOGIN OK', resp);
         }
       )
       .catch(err => {
@@ -51,7 +91,24 @@ export class AuthService {
   }
 
   logout() {
-    
+    this.router.navigate(['/login']);
+    this.afAuth.auth.signOut();
+    this.store.dispatch( new fromAuth.UnsetUserAction() );
+  }
+
+  isAuth() {
+    return this.afAuth.authState
+      .pipe(
+        map(fbUser => {
+
+          if (fbUser === null) {
+            this.router.navigate(['/login']);
+          }
+
+          return fbUser !== null;
+
+        })
+      );
   }
 
   resetPassword(email: string ) {
@@ -171,6 +228,26 @@ export class AuthService {
     });
 
   }
+
+  getUser(): User {
+
+    return {...this.user };
+  }
+
+  getMenu() {
+    return this.httpClient.get(`https://cig-control-ee8ab.firebaseio.com/menus.json`)
+      .subscribe( (menus: any[]) => {
+        return menus.filter( e => {
+          e.roles.filter( ee => {
+            if (ee.name.toLowerCase() === this.user.role.toLowerCase() ) {
+              this.menus = e;
+            }
+          });
+        });
+      });     
+  }
+
+  
 
 
 

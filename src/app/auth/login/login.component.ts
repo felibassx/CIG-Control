@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../auth.service';
+import { Menu } from '../../models/menu.model';
+import { map, filter } from 'rxjs/operators';
+import { pipe } from 'rxjs';
+import { ROLES } from '../../utils/const.utils';
 
 declare function init_plugins();
 
@@ -12,6 +16,7 @@ export class LoginComponent implements OnInit {
 
   recuerdame = false;
   email: string;
+  menu: [];
   
 
   constructor(
@@ -28,10 +33,7 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit( data: any ) {
-
-    console.log(data);
-    this.authService.login(data.email, data.password, data.recuerdame);
-   
+    this.authService.login(data.email, data.password, data.recuerdame);   
   }
 
   onCreateWithGOO() {
@@ -41,5 +43,6 @@ export class LoginComponent implements OnInit {
   onResetPassword(email: string) {
     this.authService.resetPassword(email);
   }
+
 
 }

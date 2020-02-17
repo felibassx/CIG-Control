@@ -1,9 +1,11 @@
+import { Menu } from './menu.model';
 export class User {
     public name: string;
     public email: string;
     public birdDate: Date;
     public role: string;
     public uid: string;
+    public menu?: Menu[];
 
     constructor( obj: DataObj ) {
         this.name = obj && obj.name || null;
@@ -11,6 +13,7 @@ export class User {
         this.birdDate =  obj && obj.birdDate || null;
         this.role = obj && obj.role || null;
         this.uid = obj && obj.uid || null;
+        this.menu = obj && obj.menu || null;
     }
 }
 
@@ -20,4 +23,5 @@ interface DataObj {
     name: string;
     birdDate: Date;
     role: string;
+    menu: Menu[];
 }

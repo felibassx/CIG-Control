@@ -9,13 +9,15 @@
             <ul id="sidebarnav">
                 <li class="user-profile">
                     <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false">
-                        <img src="#" alt="user" /><span class="hide-menu"> Nombre Usuario</span></a>
+                        <img src="../../assets/images/users/profile.png" alt="user" />
+                        <span class="hide-menu"> Nombre Usuario</span>
+                    </a>
                     <ul aria-expanded="false" class="collapse">
-                        <li><a routerLinkActive="active" routerLink="/perfil">Mi Perfil </a></li>
-                        <li><a href="javascript:void()">My Balance</a></li>
+                        <li><a routerLinkActive="active" routerLink="/perfil">Perfil </a></li>
+                        <li><a href="javascript:void()">Balances</a></li>
                         <li><a href="javascript:void()">Inbox</a></li>
-                        <li><a routerLinkActive="active" routerLink="/account-settings">Account Setting</a></li>
-                        <li><a (click)="authService.logout()" class="pointer">Logout</a></li>
+                        <li><a routerLinkActive="active" routerLink="/account-settings">Configuración</a></li>
+                        <li><a class="cursor-pointer" (click)="authService.logout()">Logout</a></li>
                     </ul>
                 </li>
 
