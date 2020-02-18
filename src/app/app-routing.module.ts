@@ -15,7 +15,7 @@ const routes: Routes = [
         loadChildren: './pages/pages.module#PagesModule',
         canLoad: [ AuthGuard ]
     },
-    { path: '**', redirectTo: '/nopagefound' },
+    // { path: '**', redirectTo: '/nopagefound' },
 ];
 
 

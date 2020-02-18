@@ -11,7 +11,7 @@ export interface AppState {
 
 export const appReducer: ActionReducerMap<AppState> = {
     ui: fromShared.uiReducer,
-    auth: fromAuth.authReducer,
+    auth: fromAuth.authReducer
     // ingresoEgreso: fromIngresoEgreso.ingresoEgresoReducer
 };
 

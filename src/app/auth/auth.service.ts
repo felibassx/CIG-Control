@@ -17,6 +17,8 @@ import * as fromAuth from './auth.actions';
 import { HttpClient } from '@angular/common/http';
 import { Menu } from '../models/menu.model';
 
+export interface Item { name: string; }
+
 @Injectable({
   providedIn: 'root'
 })
@@ -26,8 +28,9 @@ export class AuthService {
   gooProvider = new firebase.auth.GoogleAuthProvider();
 
   private userSubscripcion: Subscription = new Subscription();
+  private menuSubscripcion: Subscription = new Subscription();
   private user: User;
-  menus: Menu[];
+  private menus: Array<Menu> = [];
 
   constructor(
     private afAuth: AngularFireAuth,
@@ -43,24 +46,39 @@ export class AuthService {
     this.store.dispatch( new fromShared.ActivarLoadingAction() );
 
     this.afAuth.authState.subscribe((fbUser: firebase.User) => {
-      
-      if ( fbUser ) {
-        this.userSubscripcion = this.afDB.doc(`${ fbUser.uid }/user`).valueChanges()
-          .subscribe( (usuarioObj: any) => {
-            const newUser = new User( usuarioObj );
-            this.store.dispatch( new fromAuth.SetUserAction( newUser ) );
+      if (fbUser) {
+        this.userSubscripcion = this.afDB.doc(`${fbUser.uid}/user`).valueChanges()
+          .subscribe((usuarioObj: any) => {
+            const newUser = new User(usuarioObj);
             
-            this.user = newUser;
+            this.menus = [];
+            this.menuSubscripcion = this.httpClient.get(`https://cig-control-ee8ab.firebaseio.com/menus.json`)
+              .subscribe(
+                (resp: Menu[]) => {
+                  resp.forEach((menu, index) => {
 
-            this.store.dispatch( new fromShared.DesactivarLoadingAction() );
+                    console.log(menu.role, usuarioObj.role);
+                    if (menu.role === usuarioObj.role) {
+                      this.menus.push({...menu});
+                    }
+                  });
+                  this.store.dispatch(new fromAuth.SetUserAction(newUser, this.menus));
+                  this.user = newUser;
+                  this.store.dispatch(new fromShared.DesactivarLoadingAction());
+                }
+              );
+
           });
+
+        
       } else {
-          this.user = null;
-          this.userSubscripcion.unsubscribe();
-          this.store.dispatch( new fromShared.DesactivarLoadingAction() );
+        this.user = null;
+        this.userSubscripcion.unsubscribe();
+        this.menuSubscripcion.unsubscribe();
+        this.store.dispatch(new fromShared.DesactivarLoadingAction());
       }
     });
-
+    
   }
 
   login(email: string, password: string, remember: boolean) {
@@ -230,21 +248,11 @@ export class AuthService {
   }
 
   getUser(): User {
-
     return {...this.user };
   }
 
-  getMenu() {
-    return this.httpClient.get(`https://cig-control-ee8ab.firebaseio.com/menus.json`)
-      .subscribe( (menus: any[]) => {
-        return menus.filter( e => {
-          e.roles.filter( ee => {
-            if (ee.name.toLowerCase() === this.user.role.toLowerCase() ) {
-              this.menus = e;
-            }
-          });
-        });
-      });     
+  getMenu(): Menu[] {
+    return this.menus;
   }
 
   
