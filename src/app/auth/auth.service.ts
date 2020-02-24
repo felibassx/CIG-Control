@@ -16,6 +16,8 @@ import * as fromShared from '../shared/ui.action';
 import * as fromAuth from './auth.actions';
 import { HttpClient } from '@angular/common/http';
 import { Menu } from '../models/menu.model';
+import { environment } from '../../environments/environment';
+
 
 export interface Item { name: string; }
 
@@ -43,6 +45,8 @@ export class AuthService {
   // Esta funcion estará escuchando cuando el estado del usuario cambie 
   initAuthListener() {
 
+    console.log('comprobando usuario...');
+
     this.store.dispatch( new fromShared.ActivarLoadingAction() );
 
     this.afAuth.authState.subscribe((fbUser: firebase.User) => {
@@ -52,7 +56,7 @@ export class AuthService {
             const newUser = new User(usuarioObj);
             
             this.menus = [];
-            this.menuSubscripcion = this.httpClient.get(`https://cig-control-ee8ab.firebaseio.com/menus.json`)
+            this.menuSubscripcion = this.httpClient.get(environment.menuUrl)
               .subscribe(
                 (resp: Menu[]) => {
                   resp.forEach((menu, index) => {
@@ -65,6 +69,7 @@ export class AuthService {
                   this.store.dispatch(new fromAuth.SetUserAction(newUser, this.menus));
                   this.user = newUser;
                   this.store.dispatch(new fromShared.DesactivarLoadingAction());
+                  console.log('Usuario correcto');
                 }
               );
 
@@ -76,6 +81,7 @@ export class AuthService {
         this.userSubscripcion.unsubscribe();
         this.menuSubscripcion.unsubscribe();
         this.store.dispatch(new fromShared.DesactivarLoadingAction());
+        console.log('Usuario No correcto');
       }
     });
     
@@ -162,6 +168,7 @@ export class AuthService {
           name: nombre,
           birdDate,
           role,
+          img: '',
           email: resp.user.email
         };
 
@@ -220,6 +227,7 @@ export class AuthService {
             name: result.user.displayName,
             birdDate,
             role,
+            img: '',
             email: result.user.email
           };
 

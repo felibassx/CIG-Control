@@ -132,36 +132,36 @@
                 <!-- ============================================================== -->
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle waves-effect waves-dark" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <img src="#" alt="user" src="../../assets/images/users/3.jpg" class="profile-pic" /></a>
+                        <img src="#" alt="user" src="../../assets/images/avatar.png" class="profile-pic" /></a>
                     <div class="dropdown-menu dropdown-menu-right animated flipInY">
                         <ul class="dropdown-user">
                             <li>
                                 <div class="dw-user-box">
-                                    <div class="u-img"><img src="#" alt="user"></div>
+                                    <div class="u-img"><img src="../../assets/images/avatar.png" alt="user"></div>
                                     <div class="u-text">
-                                        <h4> Nombre Usuario </h4>
-                                        <p class="text-muted"> emaol@usuario </p>
-                                        <a routerLink="/perfil" class="btn btn-rounded btn-danger btn-sm">Ver Perfil</a>
+                                        <h4> {{ userName | slice:0:16 }}... </h4>
+                                        <p class="text-muted"> {{ userEmail }} </p>
+                                        <a routerLink="/profile" class="btn btn-rounded btn-danger btn-sm">Ver Perfil</a>
                                     </div>
                                 </div>
                             </li>
                             <li role="separator" class="divider"></li>
-                            <li>
-                                <a routerLink="/perfil"><i class="ti-user"></i>Perfil</a>
-                            </li>
-                            <li>
+                            <!-- <li>
+                                <a routerLink="/profile"><i class="ti-user"></i>  Perfil</a>
+                            </li> -->
+                            <!-- <li>
                                 <a href="#"><i class="ti-wallet"></i>Balances</a>
                             </li>
                             <li>
                                 <a href="#"><i class="ti-email"></i>Bandeja</a>
+                            </li> -->
+                            <li role="separator" class="divider"></li>
+                            <li>
+                                <a routerLink="/account-settings"><i class="ti-settings"></i>  Configuración</a>
                             </li>
                             <li role="separator" class="divider"></li>
                             <li>
-                                <a routerLink="/account-settings"><i class="ti-settings"></i> Configuración</a>
-                            </li>
-                            <li role="separator" class="divider"></li>
-                            <li>
-                                <a (click)="authService.logout()" class="cursor-pointer"><i class="fa fa-power-off"></i>Logout</a>
+                                <a (click)="authService.logout()" class="cursor-pointer"><i class="fa fa-power-off"></i>  Logout</a>
                             </li>
                         </ul>
                     </div>

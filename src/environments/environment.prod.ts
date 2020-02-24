@@ -1,5 +1,6 @@
 export const environment = {
-  production: true,
+  production: false,
+  menuUrl: 'https://cig-control-ee8ab.firebaseio.com/menus.json',
   firebase: {
     apiKey: 'AIzaSyAlHyZiP-5JVHjYmBrLnwgCNIQqdcgnCRU',
     authDomain: 'cig-control-ee8ab.firebaseapp.com',

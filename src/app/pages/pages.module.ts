@@ -6,6 +6,9 @@ import { SharedModule } from '../shared/shared.module';
 import { DetalleIngresosComponent } from './detalle-ingresos/detalle-ingresos.component';
 import { DetalleEgresosComponent } from './detalle-egresos/detalle-egresos.component';
 import { BalanceComponent } from './balance/balance.component';
+import { ReportsComponent } from './reports/reports.component';
+import { AccountSettingsComponent } from './account-settings/account-settings.component';
+import { ProfileComponent } from './profile/profile.component';
 
 
 
@@ -14,7 +17,10 @@ import { BalanceComponent } from './balance/balance.component';
     HomeComponent,
     DetalleIngresosComponent,
     DetalleEgresosComponent,
-    BalanceComponent
+    BalanceComponent,
+    ReportsComponent,
+    AccountSettingsComponent,
+    ProfileComponent
   ],
   imports: [
     CommonModule,
