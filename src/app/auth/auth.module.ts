@@ -9,6 +9,7 @@ import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [LoginComponent, RegisterComponent],
+  exports: [LoginComponent, RegisterComponent],
   imports: [
     FormsModule,
     AngularFireAuthModule,

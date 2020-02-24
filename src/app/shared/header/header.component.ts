@@ -14,25 +14,28 @@ import { filter } from 'rxjs/operators';
 export class HeaderComponent implements OnInit {
 
   user: User;
-  userName: string;
-  userEmail: string;
-  subscription: Subscription = new Subscription();
+  // userName: string;
+  // userEmail: string;
+  // subscription: Subscription = new Subscription();
 
   constructor(
     public authService: AuthService,
-    public store: Store<AppState>
+    // public store: Store<AppState>
   ) { }
 
   ngOnInit() {
-    this.subscription = this.store.select('auth')
-      .pipe(
-        filter(auth => auth.user != null) // para controlar que no pasen datos nulos
-      )
-      .subscribe((auth: any) => {
-        this.user = auth.user;
-        this.userEmail = auth.user.email;        
-        this.userName = auth.user.name;
-      });
+     
+    this.user = JSON.parse(localStorage.getItem('user'));   
+
+    // this.subscription = this.store.select('auth')
+    //   .pipe(
+    //     filter(auth => auth.user != null) // para controlar que no pasen datos nulos
+    //   )
+    //   .subscribe((auth: any) => {
+    //     this.user = auth.user;
+    //     this.userEmail = auth.user.email;        
+    //     this.userName = auth.user.name;
+    //   });
   }
 
   search( searchText: string ) {}

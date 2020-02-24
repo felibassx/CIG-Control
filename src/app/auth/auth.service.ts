@@ -17,6 +17,7 @@ import * as fromAuth from './auth.actions';
 import { HttpClient } from '@angular/common/http';
 import { Menu } from '../models/menu.model';
 import { environment } from '../../environments/environment';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 
 export interface Item { name: string; }
@@ -39,15 +40,16 @@ export class AuthService {
     private afDB: AngularFirestore,
     private router: Router,
     private store: Store<AppState>,
-    private httpClient: HttpClient
+    private httpClient: HttpClient,
+    private spinner: NgxSpinnerService
   ) { }
 
   // Esta funcion estará escuchando cuando el estado del usuario cambie 
   initAuthListener() {
 
-    console.log('comprobando usuario...');
+    this.spinner.show();
 
-    this.store.dispatch( new fromShared.ActivarLoadingAction() );
+    // this.store.dispatch( new fromShared.ActivarLoadingAction() );
 
     this.afAuth.authState.subscribe((fbUser: firebase.User) => {
       if (fbUser) {
@@ -66,10 +68,14 @@ export class AuthService {
                       this.menus.push({...menu});
                     }
                   });
-                  this.store.dispatch(new fromAuth.SetUserAction(newUser, this.menus));
+
+                  localStorage.setItem('menus', JSON.stringify(this.menus));
+                  localStorage.setItem('user', JSON.stringify(newUser));
+
+                  // this.store.dispatch(new fromAuth.SetUserAction(newUser, this.menus));
                   this.user = newUser;
-                  this.store.dispatch(new fromShared.DesactivarLoadingAction());
-                  console.log('Usuario correcto');
+                  // this.store.dispatch(new fromShared.DesactivarLoadingAction());
+                  this.spinner.hide();
                 }
               );
 
@@ -80,8 +86,9 @@ export class AuthService {
         this.user = null;
         this.userSubscripcion.unsubscribe();
         this.menuSubscripcion.unsubscribe();
-        this.store.dispatch(new fromShared.DesactivarLoadingAction());
-        console.log('Usuario No correcto');
+        // this.store.dispatch(new fromShared.DesactivarLoadingAction());
+        this.spinner.hide();
+        // console.log('Usuario No correcto');
       }
     });
     
@@ -89,7 +96,7 @@ export class AuthService {
 
   login(email: string, password: string, remember: boolean) {
 
-    // this.store.dispatch( new ActivarLoadingAction() );
+    this.spinner.show();
 
     if ( remember ) {
       localStorage.setItem( 'email',  email );
@@ -102,10 +109,11 @@ export class AuthService {
         resp => {
           this.store.dispatch( new fromShared.DesactivarLoadingAction() );
           this.router.navigate(['/']);
-          // console.log('LOGIN OK', resp);
+          this.spinner.hide();
         }
       )
       .catch(err => {
+        this.spinner.hide();
         Swal.fire(
           'Error Login',
           'Se ha producido un error al intentar autenticar en la aplicación. Detalle: ' + err,
@@ -115,9 +123,17 @@ export class AuthService {
   }
 
   logout() {
-    this.router.navigate(['/login']);
-    this.afAuth.auth.signOut();
-    this.store.dispatch( new fromAuth.UnsetUserAction() );
+
+    this.user = null;
+    this.menus = [];
+    localStorage.removeItem('menus');
+    localStorage.removeItem('user');
+    this.afAuth.auth.signOut(); 
+    // this.router.navigate(['/login']);
+    window.location.assign('/login');
+
+    // this.store.dispatch( new fromAuth.UnsetUserAction() );
+
   }
 
   isAuth() {
@@ -159,10 +175,11 @@ export class AuthService {
 
   createUser(nombre: string, birdDate: Date, email: string, role: string, password: string) {
 
+    this.spinner.show();
     this.afAuth.auth.createUserWithEmailAndPassword(email, password)
     .then(
       (resp) => {
-        console.log(resp);
+        // console.log(resp);
         const user: User = {
           uid: resp.user.uid,
           name: nombre,
@@ -175,12 +192,14 @@ export class AuthService {
         this.afDB.doc(`${user.uid}/user`)
           .set(user)
           .then( (respDoc) => {
-            console.log('CORRECTO', user);
+            // console.log('CORRECTO', user);
             this.router.navigate(['/']);
+            this.spinner.hide();
           })
           .catch(
             (err) => {
-              console.log('ERROR', err);
+              this.spinner.hide();
+              // console.log('ERROR', err);
               // this.store.dispatch( new DesactivarLoadingAction() );
             }
           );
@@ -215,13 +234,15 @@ export class AuthService {
 
   CreateUserWithGoogle() {
 
+    this.spinner.show();
+
     const birdDate = new Date();
     const role = ROLES.USER_ROLE;
 
     this.afAuth.auth.signInWithPopup(this.gooProvider)
     .then(
       (result) => {
-        console.log(result);
+        // console.log(result);
         const user: User = {
             uid: result.user.uid,
             name: result.user.displayName,
@@ -234,11 +255,13 @@ export class AuthService {
         this.afDB.doc(`${user.uid}/user`)
           .set(user)
           .then( (respDoc) => {
-            console.log('CORRECTO GOOGLE', user);
+            // console.log('CORRECTO GOOGLE', user);
             this.router.navigate(['/']);
+            this.spinner.hide();
           })
           .catch(
             (err) => {
+              this.spinner.hide();
               Swal.fire(
                 'Error Login Google',
                 'Se ha producido un error al intentar autenticar en la aplicación. Detalle: ' + err,
@@ -250,7 +273,7 @@ export class AuthService {
 
     })
     .catch(err => {
-      console.log(err.message);
+      this.spinner.hide();
     });
 
   }

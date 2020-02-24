@@ -1,4 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
@@ -19,6 +20,7 @@ import { FormsModule } from '@angular/forms';
 import { APP_ROUTES } from './app-routing.module';
 import { SharedModule } from './shared/shared.module';
 import { HttpClientModule } from '@angular/common/http';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 
 
@@ -29,9 +31,11 @@ import { HttpClientModule } from '@angular/common/http';
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     AuthModule,
     FormsModule,
     HttpClientModule,
+    NgxSpinnerModule,
     AngularFireModule.initializeApp( environment.firebase ),
     AngularFirestoreModule,
     StoreModule.forRoot(appReducer),

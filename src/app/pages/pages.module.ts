@@ -28,7 +28,13 @@ import { ProfileComponent } from './profile/profile.component';
     SharedModule
   ],
   exports: [
-    HomeComponent
+    HomeComponent,
+    DetalleIngresosComponent,
+    DetalleEgresosComponent,
+    BalanceComponent,
+    ReportsComponent,
+    AccountSettingsComponent,
+    ProfileComponent
   ]
 })
 export class PagesModule { }

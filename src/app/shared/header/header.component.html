@@ -7,7 +7,7 @@
         <!-- Logo -->
         <!-- ============================================================== -->
         <div class="navbar-header">
-            <a class="navbar-brand" routerLink="/dashboard">
+            <a class="navbar-brand" routerLink="/home">
                 <!-- Logo icon --><b>
                     <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
                     <!-- Dark Logo icon -->
@@ -16,7 +16,8 @@
                     <img src="../../assets/images/logo-light-icon.png" alt="homepage" class="light-logo" />
                 </b>
                 <!--End Logo icon -->
-                <!-- Logo text --><span>
+                <!-- Logo text -->
+                <span style="font-family: 'Anton'; font-size: 24px;">
                     GIG - Control
                     <!-- dark Logo text -->
                     <!-- <img src="../../assets/images/logo-text.png" alt="homepage" class="dark-logo" /> -->
@@ -139,8 +140,8 @@
                                 <div class="dw-user-box">
                                     <div class="u-img"><img src="../../assets/images/avatar.png" alt="user"></div>
                                     <div class="u-text">
-                                        <h4> {{ userName | slice:0:16 }}... </h4>
-                                        <p class="text-muted"> {{ userEmail }} </p>
+                                        <h4> {{ user.name | slice:0:16 }}... </h4>
+                                        <p class="text-muted"> {{ user.email }} </p>
                                         <a routerLink="/profile" class="btn btn-rounded btn-danger btn-sm">Ver Perfil</a>
                                     </div>
                                 </div>
@@ -161,7 +162,7 @@
                             </li>
                             <li role="separator" class="divider"></li>
                             <li>
-                                <a (click)="authService.logout()" class="cursor-pointer"><i class="fa fa-power-off"></i>  Logout</a>
+                                <a (click)="authService.logout()" class="cursor-pointer"><i class="fa fa-power-off"></i>  Salir</a>
                             </li>
                         </ul>
                     </div>

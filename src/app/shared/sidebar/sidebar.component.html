@@ -10,7 +10,7 @@
                 <li class="user-profile">
                     <a class="has-arrow waves-effect waves-dark" aria-expanded="false">
                         <img src="../../assets/images/avatar.png" alt="user" />
-                        <span class="hide-menu">{{ userName | slice:0:16  }}...</span>
+                        <span class="hide-menu">{{ user.name | slice:0:16  }}...</span>
                     </a>
                     <ul aria-expanded="false" class="collapse">
                         <li><a routerLinkActive="active" routerLink="/profile">Mi Perfil </a></li>
@@ -27,9 +27,8 @@
 
                 <li *ngFor="let menu of menus">
                     <a class="has-arrow waves-effect waves-dark" aria-expanded="false">
-                        <i [class]="menu.icon"></i>
-                        <span class="hide-menu"> {{ menu.title }} 
-                            <!-- <span class="label label-rouded label-themecolor pull-right">{{menu.submenu.length}}</span> -->
+                        <i [class]="menu.icon"></i><span class="hide-menu"> {{ menu.title }} 
+                            
                         </span>
                     </a>
                     <ul aria-expanded="false" class="collapse">
@@ -40,6 +39,22 @@
 
                     </ul>
                 </li>
+
+                <!-- <li *ngFor="let menu of menus" class="user-profile">
+                    <a class="has-arrow waves-effect waves-dark" aria-expanded="false">
+                        <i [class]="menu.icon"></i>
+                        <span class="hide-menu"> {{ menu.title }} 
+                           
+                        </span>
+                    </a>
+                    <ul aria-expanded="false" class="collapse">
+
+                        <li *ngFor="let submenu of menu.submenu">
+                            <a routerLinkActive="active" [routerLink]="submenu.url"> {{ submenu.title }} </a>
+                        </li>
+
+                    </ul>
+                </li> -->
 
 
             </ul>
