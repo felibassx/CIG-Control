@@ -63,7 +63,7 @@ export class AuthService {
                 (resp: Menu[]) => {
                   resp.forEach((menu, index) => {
 
-                    console.log(menu.role, usuarioObj.role);
+                    // console.log(menu.role, usuarioObj.role);
                     if (menu.role === usuarioObj.role) {
                       this.menus.push({...menu});
                     }

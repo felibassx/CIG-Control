@@ -4,6 +4,7 @@ import { RegisterComponent } from './auth/register/register.component';
 // import { AuthGuardService } from './auth/auth-guard.service';
 import { PagesComponent } from './pages/pages.component';
 import { AuthGuard } from './auth/auth.guard';
+import { NopagefoundComponent } from './shared/nopagefound/nopagefound.component';
 
 
 const routes: Routes = [
@@ -15,7 +16,7 @@ const routes: Routes = [
         loadChildren: './pages/pages.module#PagesModule',
         canLoad: [ AuthGuard ]
     },
-    // { path: '**', redirectTo: '/nopagefound' },
+    { path: '**', component: NopagefoundComponent },
 ];
 
 

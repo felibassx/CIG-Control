@@ -25,17 +25,8 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit() {
      
-    this.user = JSON.parse(localStorage.getItem('user'));   
+    this.user =  this.authService.getUser(); // JSON.parse(localStorage.getItem('user'));   
 
-    // this.subscription = this.store.select('auth')
-    //   .pipe(
-    //     filter(auth => auth.user != null) // para controlar que no pasen datos nulos
-    //   )
-    //   .subscribe((auth: any) => {
-    //     this.user = auth.user;
-    //     this.userEmail = auth.user.email;        
-    //     this.userName = auth.user.name;
-    //   });
   }
 
   search( searchText: string ) {}

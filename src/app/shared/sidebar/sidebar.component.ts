@@ -29,7 +29,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
   ngOnInit() {
 
     this.menus = JSON.parse(localStorage.getItem('menus'));   
-    this.user = JSON.parse(localStorage.getItem('user'));   
+    this.user = this.authService.getUser();   
 
     // this.spinner.show();
     // this.subscription = this.store.select('auth')
